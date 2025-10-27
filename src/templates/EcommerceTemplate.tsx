@@ -1,78 +1,55 @@
 import { ReactNode } from 'react'
-import { PageTemplate } from './PageTemplate'
+import { Link } from 'react-router-dom'
+import { ShoppingCart } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { BrandLogoLeft } from '@/components/BrandLogoLeft'
 import { SocialLinks } from '@/components/SocialLinks'
 import { FloatingCart } from '@/components/FloatingCart'
-import { ProfileMenu } from '@/components/ProfileMenu'
-import { Link } from 'react-router-dom'
-import { Button } from '@/components/ui/button'
-import { ShoppingCart } from 'lucide-react'
-import { useCartUI } from '@/components/CartProvider'
 import { useCart } from '@/contexts/CartContext'
+import { useCartUI } from '@/components/CartProvider'
+import { ProfileMenu } from '@/components/ProfileMenu'
 
 interface EcommerceTemplateProps {
   children: ReactNode
-  pageTitle?: string
-  showCart?: boolean
-  className?: string
-  headerClassName?: string
-  footerClassName?: string
-  layout?: 'default' | 'full-width' | 'centered'
 }
 
-export const EcommerceTemplate = ({
-  children,
-  pageTitle,
-  showCart = true,
-  className,
-  headerClassName,
-  footerClassName,
-  layout = 'default'
-}: EcommerceTemplateProps) => {
-  const { openCart } = useCartUI()
+export const EcommerceTemplate = ({ children }: EcommerceTemplateProps) => {
   const { getTotalItems } = useCart()
+  const { openCart } = useCartUI()
   const totalItems = getTotalItems()
 
-  const header = (
-    <div className={`py-4 bg-midnight/95 backdrop-blur-sm ${headerClassName}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Link to="/">
+  return (
+    <div className="min-h-screen flex flex-col bg-cream">
+      {/* Header */}
+      <header className="sticky top-0 z-40 w-full border-b border-stone/20 bg-cream/95 backdrop-blur supports-[backdrop-filter]:bg-cream/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            <div className="flex items-center gap-8">
               <BrandLogoLeft />
-            </Link>
-          </div>
-
-          {/* Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <nav className="flex space-x-6">
-              <Link 
-                to="/" 
-                className="text-cream/70 hover:text-gold transition-colors font-medium"
-              >
-                Home
-              </Link>
-              <Link 
-                to="/blog" 
-                className="text-cream/70 hover:text-gold transition-colors font-medium"
-              >
-                Journal
-              </Link>
-            </nav>
-          </div>
-
-          {/* Profile & Cart */}
-          <div className="flex items-center space-x-2">
-            <ProfileMenu />
+              <nav className="hidden md:flex items-center gap-6">
+                <Link 
+                  to="/" 
+                  className="text-sm font-medium text-charcoal hover:text-gold transition-colors"
+                >
+                  Home
+                </Link>
+                <Link 
+                  to="/about" 
+                  className="text-sm font-medium text-charcoal hover:text-gold transition-colors"
+                >
+                  About Us
+                </Link>
+              </nav>
+            </div>
             
-            {showCart && (
+            <div className="flex items-center gap-2">
+              <ProfileMenu />
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={openCart}
-                className="relative text-cream hover:text-gold hover:bg-gold/10"
-                aria-label="View cart"
+                className="relative"
+                aria-label="Shopping cart"
               >
                 <ShoppingCart className="h-5 w-5" />
                 {totalItems > 0 && (
@@ -81,122 +58,85 @@ export const EcommerceTemplate = ({
                   </span>
                 )}
               </Button>
-            )}
-          </div>
-        </div>
-
-        {/* Page Title */}
-        {pageTitle && (
-          <div className="mt-6">
-            <h1 className="text-3xl font-serif font-bold text-cream">
-              {pageTitle}
-            </h1>
-          </div>
-        )}
-      </div>
-    </div>
-  )
-
-  const footer = (
-    <div className={`bg-midnight text-cream py-16 ${footerClassName}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          {/* Brand */}
-          <div className="md:col-span-2">
-            <BrandLogoLeft />
-            <p className="mt-4 text-stone leading-relaxed max-w-md">
-              Handcrafted luxury fragrances for your sacred spaces. Each candle and diffuser is made with premium ingredients and designed to transform your home into a sensorial sanctuary.
-            </p>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h3 className="font-serif font-semibold mb-4 text-gold">Explore</h3>
-            <div className="space-y-3">
-              <Link 
-                to="/" 
-                className="block text-stone hover:text-gold transition-colors"
-              >
-                Shop All
-              </Link>
-              <Link 
-                to="/blog" 
-                className="block text-stone hover:text-gold transition-colors"
-              >
-                Scent Journal
-              </Link>
-              <Link 
-                to="/" 
-                className="block text-stone hover:text-gold transition-colors"
-              >
-                Gift Sets
-              </Link>
-              <Link 
-                to="/" 
-                className="block text-stone hover:text-gold transition-colors"
-              >
-                Scent Guide
-              </Link>
-            </div>
-          </div>
-
-          {/* Customer Care */}
-          <div>
-            <h3 className="font-serif font-semibold mb-4 text-gold">Customer Care</h3>
-            <div className="space-y-3">
-              <a 
-                href="#" 
-                className="block text-stone hover:text-gold transition-colors"
-              >
-                Contact Us
-              </a>
-              <a 
-                href="#" 
-                className="block text-stone hover:text-gold transition-colors"
-              >
-                Shipping Info
-              </a>
-              <a 
-                href="#" 
-                className="block text-stone hover:text-gold transition-colors"
-              >
-                Returns
-              </a>
-              <a 
-                href="#" 
-                className="block text-stone hover:text-gold transition-colors"
-              >
-                FAQ
-              </a>
             </div>
           </div>
         </div>
+      </header>
 
-        {/* Social Links */}
-        <div className="border-t border-stone/20 pt-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-stone text-sm">
-              &copy; 2024 Sensorial Home. All rights reserved.
-            </p>
-            <SocialLinks />
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-
-  return (
-    <>
-      <PageTemplate 
-        header={header}
-        footer={footer}
-        className={className}
-        layout={layout}
-      >
+      {/* Main Content */}
+      <main className="flex-1">
         {children}
-      </PageTemplate>
-      
-      {showCart && <FloatingCart />}
-    </>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-midnight text-cream border-t border-stone/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="col-span-1 md:col-span-2">
+              <BrandLogoLeft />
+              <p className="mt-4 text-stone text-sm max-w-md">
+                Handcrafted luxury fragrances to transform your spaces into sensorial sanctuaries.
+              </p>
+              <div className="mt-6">
+                <SocialLinks />
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-4">Shop</h3>
+              <ul className="space-y-2 text-sm text-stone">
+                <li>
+                  <Link to="/" className="hover:text-gold transition-colors">
+                    All Products
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/" className="hover:text-gold transition-colors">
+                    Candles
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/" className="hover:text-gold transition-colors">
+                    Diffusers
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/" className="hover:text-gold transition-colors">
+                    Gift Sets
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-4">Company</h3>
+              <ul className="space-y-2 text-sm text-stone">
+                <li>
+                  <Link to="/about" className="hover:text-gold transition-colors">
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/blog" className="hover:text-gold transition-colors">
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-gold transition-colors">
+                    Contact
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="mt-8 pt-8 border-t border-stone/20 text-center text-sm text-stone">
+            <p>&copy; {new Date().getFullYear()} All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+
+      <FloatingCart />
+    </div>
   )
 }
